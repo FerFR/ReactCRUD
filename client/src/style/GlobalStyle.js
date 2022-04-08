@@ -11,8 +11,6 @@ export default createGlobalStyle`
 	}
 	p,span,button,h1,h2,h3,h4,h5,h6,label{
 		font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-	}
-	h1{
 		color: ${(props) => props.theme.colors.primary}
 	}
 `;

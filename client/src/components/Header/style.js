@@ -1,12 +1,26 @@
 import styled from 'styled-components';
+import { Desktop, Mobile, Tablet } from '../../style/Responsive';
 export const Container = styled.header`
     padding: 10px;
-    max-width: 1000px;
-    margin: 0 auto;
+    background-color: white;
 `;
 export const Content = styled.div`
     display: flex;
     justify-content: space-between;
+    max-width: 370px;
+    ${Tablet({ maxWidth: '760px' })}
+    ${Desktop({ maxWidth: '1000px' })}
+    margin: 0 auto;
 `;
 export const Logo = styled.h1``;
-export const Button = styled.button``;
+export const Button = styled.button`
+    border-radius: 50%;
+    padding: 2px 10px;
+    font-size: 32px;
+    border: 2px solid ${(props) => props.theme.colors.primary};
+    transition: 200ms ease-out;
+    &:hover {
+        background-color: ${(props) => props.theme.colors.primary};
+        color: white;
+    }
+`;
