@@ -1,0 +1,16 @@
+{
+    "name": "api",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "scripts": {
+        "dev": "nodemon src/server.js"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.15",
+        "sucrase": "^3.21.0"
+    },
+    "dependencies": {
+        "express": "^4.17.3"
+    }
+}
