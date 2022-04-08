@@ -17,10 +17,11 @@ export const Button = styled.button`
     border-radius: 50%;
     padding: 2px 10px;
     font-size: 32px;
-    border: 2px solid ${(props) => props.theme.colors.primary};
     transition: 200ms ease-out;
+    border: none;
+    background-color: ${(props) => props.theme.colors.secondary};
+    color: white;
     &:hover {
         background-color: ${(props) => props.theme.colors.primary};
-        color: white;
     }
 `;

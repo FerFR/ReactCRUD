@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Tablet } from '../../style/Responsive';
 
 export const Container = styled.div`
     display: ${(props) => (props.isActive ? 'block' : 'none')};

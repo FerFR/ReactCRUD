@@ -1,8 +1,11 @@
 import Theme from './style/Theme';
+import { useState } from 'react';
 import GlobalStyle from './style/GlobalStyle';
 import Header from './components/Header';
 import ModalForm from './components/ModalForm';
-import { useState } from 'react';
+import Card from './components/Card';
+import Grid from './components/Grid';
+
 const App = () => {
     const [toggleModal, setToggleModal] = useState(false);
 
@@ -14,6 +17,20 @@ const App = () => {
                 setToggleModal={setToggleModal}
                 toggleModal={toggleModal}
             />
+            <Grid>
+                <Card
+                    title="Teste"
+                    paragraph="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit consectetur a aliquid at nisi labore!"
+                />
+                <Card
+                    title="Teste"
+                    paragraph="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit consectetur a aliquid at nisi labore!"
+                />
+                <Card
+                    title="Teste"
+                    paragraph="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit consectetur a aliquid at nisi labore!"
+                />
+            </Grid>
         </Theme>
     );
 };
