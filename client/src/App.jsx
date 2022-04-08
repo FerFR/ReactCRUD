@@ -20,15 +20,15 @@ const App = () => {
             <Grid>
                 <Card
                     title="Teste"
-                    paragraph="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit consectetur a aliquid at nisi labore!"
+                    description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit consectetur a aliquid at nisi labore!"
                 />
                 <Card
                     title="Teste"
-                    paragraph="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit consectetur a aliquid at nisi labore!"
+                    description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit consectetur a aliquid at nisi labore!"
                 />
                 <Card
                     title="Teste"
-                    paragraph="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit consectetur a aliquid at nisi labore!"
+                    description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit consectetur a aliquid at nisi labore!"
                 />
             </Grid>
         </Theme>
