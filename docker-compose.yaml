@@ -9,6 +9,8 @@ services:
             - ./client:/usr/app
         ports:
             - 3000:3000
+        networks:
+            - connection
     api:
         build:
             context: ./api
@@ -17,3 +19,18 @@ services:
             - ./api:/usr/app
         ports:
             - 3001:3000
+        networks:
+            - connection
+    db:
+        image: mongo:5.0
+        container_name: db
+        volumes:
+            - ./db:/data/db
+        ports:
+            - 27017:27017
+        networks:
+            - connection
+
+networks:
+    connection:
+        driver: bridge

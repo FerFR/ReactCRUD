@@ -1,6 +1,16 @@
 import express from 'express';
+import mongoose from 'mongoose';
 const app = express();
+
 app.get('/', (req, res) => {
     res.send('Hello World');
 });
-app.listen(3000);
+
+mongoose
+    .connect('mongodb://db:27017')
+    .catch((e) => {
+        throw new Error(e);
+    })
+    .finally(() => {
+        app.listen(3000);
+    });
