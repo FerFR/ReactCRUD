@@ -1,6 +1,6 @@
 import postModel from '../models/postModel';
 
-export default postRepository = {
+const postRepository = {
     async readAll() {
         let allPosts = await postModel.find();
         return allPosts;
@@ -31,3 +31,5 @@ export default postRepository = {
         return postDeleted;
     },
 };
+
+export default postRepository;

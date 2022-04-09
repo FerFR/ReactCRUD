@@ -1,6 +1,6 @@
 import postRepository from '../repository/postRepository';
 
-export default PostController = {
+const postController = {
     async index(req, res) {
         let allPosts = await postRepository.readAll();
         res.status(200).json(allPosts);
@@ -41,3 +41,5 @@ export default PostController = {
         res.status(200).json(postDeleted);
     },
 };
+
+export default postController;
