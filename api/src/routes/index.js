@@ -1,10 +1,11 @@
 import { Router } from 'express';
-import postModel from '../model/postModel';
+import postController from '../controllers/postController';
+
 const routes = Router();
 
-routes.get('/', async (req, res) => {
-    let allPosts = await postModel.find();
-    res.status(200).json(allPosts);
-});
+routes.get('/', postController.index);
+routes.post('/', postController.create);
+routes.put('/:id?', postController.update);
+routes.delete('/:id?', postController.delete);
 
 export default routes;

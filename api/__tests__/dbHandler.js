@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import postModel from '../src/model/postModel';
 
 let mongod;
 
@@ -27,19 +26,4 @@ export const clear = async () => {
             await collection.deleteMany();
         }
     }
-};
-
-export const dbData = [
-    {
-        title: 'First Post',
-        desc: 'First Post Desc',
-    },
-    {
-        title: 'Second Post',
-        desc: 'Second Post Desc',
-    },
-];
-
-export const seed = async () => {
-    await postModel.insertMany(dbData);
 };

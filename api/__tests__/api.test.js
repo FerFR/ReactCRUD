@@ -1,102 +1,280 @@
 import request from 'supertest';
-import app from '../src/app';
+import app from '../src/utils/app';
 import * as dbHandler from './dbHandler';
+import postModel from '../src/models/postModel';
 
 beforeAll(async () => await dbHandler.connect());
-beforeEach(async () => await dbHandler.seed());
 afterEach(async () => await dbHandler.clear());
 afterAll(async () => await dbHandler.close());
 
-describe('GET', () => {
-    it('should respond with a object of all posts', async () => {
-        let response = await request(app)
-            .get('/')
-            .expect(200)
-            .expect('Content-Type', /json/);
+describe('Get All Posts', () => {
+    it('should retrieve all posts', async () => {
+        const postData = [
+            {
+                title: 'First Post',
+                desc: 'First Post Description',
+            },
+            {
+                title: 'Second Post',
+                desc: 'Second Post Description',
+            },
+        ];
 
+        await postModel.insertMany(postData);
+
+        let response = await request(app).get('/').expect(200);
         expect(response.body).toEqual(
-            expect.arrayContaining([
-                expect.objectContaining({
-                    _id: expect.any(String),
-                    title: expect.any(String),
-                    desc: expect.any(String),
-                }),
-            ])
+            expect.objectContaining({
+                name: 'OK',
+                message: 'All Posts Retrieved Successfully',
+                status: 200,
+                data: expect.arrayContaining([
+                    expect.any(Object),
+                    expect.any(Object),
+                ]),
+            })
         );
     });
 });
 
-describe('POST', () => {
+describe('Create new Post', () => {
     it('should create a new post', async () => {
-        let response = await request(app)
-            .post('/')
-            .send({
-                title: 'Fake Post Title',
-                desc: 'Fake Post Description',
-            })
-            .expect(201);
+        let newPost = {
+            title: 'Fake Post Title',
+            desc: 'Fake Post Description',
+        };
+        let response = await request(app).post('/').send(newPost).expect(201);
 
         expect(response.body).toEqual(
-            expect.arrayContaining([
-                expect.objectContaining({
-                    _id: expect.any(String),
-                    title: expect.any(String),
-                    desc: expect.any(String),
+            expect.objectContaining({
+                name: 'CREATED',
+                message: 'Post Created Successfully',
+                status: 201,
+                data: expect.objectContaining({
+                    title: expect.stringContaining(newPost.title),
+                    desc: expect.stringContaining(newPost.desc),
                 }),
-            ])
+            })
         );
     });
 
-    it('should throw a error for missing title on create', async () => {
-        let response = await request(app)
-            .post('/')
-            .send({
-                desc: 'Fake Post Description',
-            })
-            .expect(400);
+    it('should not create because title is missing', async () => {
+        let newPost = {
+            desc: 'Fake Post Description',
+        };
+        let response = await request(app).post('/').send(newPost).expect(400);
 
-        expect(response.body.statusCode).toBe(400);
-        expect(response.body.message).toBe('Title is missing or invalid');
+        expect(response.body).toEqual(
+            expect.objectContaining({
+                name: 'BAD REQUEST',
+                message: 'Title is missing or is invalid',
+                status: 400,
+                data: null,
+            })
+        );
     });
 
-    it('should throw a error for invalid title on create', async () => {
-        let response = await request(app)
-            .post('/')
-            .send({
-                title: '',
-                desc: 'Fake Post Description',
-            })
-            .expect(400);
+    it('should not create because title is invalid', async () => {
+        let newPost = {
+            title: '',
+            desc: 'Fake Post Description',
+        };
+        let response = await request(app).post('/').send(newPost).expect(400);
 
-        expect(response.body.statusCode).toBe(400);
-        expect(response.body.message).toBe('Title is missing or invalid');
-    });
-    it('should throw a error for missing desc on create', async () => {
-        let response = await request(app)
-            .post('/')
-            .send({
-                title: 'Fake Post Title',
+        expect(response.body).toEqual(
+            expect.objectContaining({
+                name: 'BAD REQUEST',
+                message: 'Title is missing or is invalid',
+                status: 400,
+                data: null,
             })
-            .expect(400);
-
-        expect(response.body.statusCode).toBe(400);
-        expect(response.body.message).toBe('Description is missing or invalid');
+        );
     });
 
-    it('should throw a error for invalid desc on create', async () => {
-        let response = await request(app)
-            .post('/')
-            .send({
-                desc: '',
-                title: 'Fake Post Title',
-            })
-            .expect(400);
+    it('should not create because desc is missing', async () => {
+        let newPost = {
+            title: 'Fake Post Title',
+        };
+        let response = await request(app).post('/').send(newPost).expect(400);
 
-        expect(response.body.statusCode).toBe(400);
-        expect(response.body.message).toBe('Description is missing or invalid');
+        expect(response.body).toEqual(
+            expect.objectContaining({
+                name: 'BAD REQUEST',
+                message: 'Description is missing or is invalid',
+                status: 400,
+                data: null,
+            })
+        );
+    });
+
+    it('should not create because desc is invalid', async () => {
+        let newPost = {
+            title: 'Fake Post Title',
+            desc: '',
+        };
+        let response = await request(app).post('/').send(newPost).expect(400);
+
+        expect(response.body).toEqual(
+            expect.objectContaining({
+                name: 'BAD REQUEST',
+                message: 'Description is missing or is invalid',
+                status: 400,
+                data: null,
+            })
+        );
     });
 });
 
-describe('PUT', () => {});
+describe('Update Post', () => {
+    it('Should update a existing post', async () => {
+        let newPost = await postModel.create({
+            title: 'Título Teste',
+            desc: 'Desc Teste',
+        });
 
-describe('DELETE', () => {});
+        let newData = {
+            title: 'Título Teste 2',
+        };
+
+        let response = await request(app).put(`/${newPost._id}`).send(newData);
+
+        expect(response.body).toEqual(
+            expect.objectContaining({
+                name: 'OK',
+                message: 'Post Updated Successfully',
+                status: 200,
+                data: expect.objectContaining({
+                    _id: expect.any(String),
+                    __v: expect.any(Number),
+                    title: newData.title,
+                    desc: newPost.desc,
+                }),
+            })
+        );
+    });
+
+    it('should not updated bescause new data is missing or is invalid', async () => {
+        let newPost = await postModel.create({
+            title: 'Título Teste',
+            desc: 'Desc Teste',
+        });
+
+        let newData = {
+            title: '',
+            desc: '',
+        };
+
+        let response = await request(app).put(`/${newPost._id}`).send(newData);
+
+        expect(response.body).toEqual(
+            expect.objectContaining({
+                name: 'BAD REQUEST',
+                message: 'New Post Data is Missing',
+                status: 400,
+                data: null,
+            })
+        );
+    });
+
+    it('should not updated because post not exists', async () => {
+        let newPost = await postModel.create({
+            title: 'Título Teste',
+            desc: 'Desc Teste',
+        });
+
+        let newData = {
+            title: 'Bla bal ablablala',
+            desc: 'Blablalbalblablaba',
+        };
+
+        let response = await request(app).put(`/31231231231`).send(newData);
+
+        expect(response.body).toEqual(
+            expect.objectContaining({
+                name: 'NOT FOUND',
+                message: 'Post Not Found',
+                status: 404,
+                data: null,
+            })
+        );
+    });
+
+    it('should not updated because id is missing', async () => {
+        let newPost = await postModel.create({
+            title: 'Título Teste',
+            desc: 'Desc Teste',
+        });
+
+        let newData = {
+            title: 'Bla bal ablablala',
+            desc: 'Blablalbalblablaba',
+        };
+
+        let response = await request(app).put('/').send(newData);
+
+        expect(response.body).toEqual(
+            expect.objectContaining({
+                name: 'NOT FOUND',
+                message: 'Post Not Found',
+                status: 404,
+                data: null,
+            })
+        );
+    });
+});
+
+describe('Delete Post', () => {
+    it('should delete a existing post', async () => {
+        let newPost = await postModel.create({
+            title: 'Título Teste',
+            desc: 'Desc Teste',
+        });
+
+        let response = await request(app).delete(`/${newPost._id}`);
+
+        expect(response.body).toEqual(
+            expect.objectContaining({
+                name: 'OK',
+                message: 'Post Deleted Successfully',
+                status: 200,
+                data: null,
+            })
+        );
+    });
+
+    it('should not delete because post does not exists', async () => {
+        let newPost = await postModel.create({
+            title: 'Título Teste',
+            desc: 'Desc Teste',
+        });
+
+        let response = await request(app).delete(`/313123131`);
+
+        expect(response.body).toEqual(
+            expect.objectContaining({
+                name: 'NOT FOUND',
+                message: 'Post Not Found',
+                status: 404,
+                data: null,
+            })
+        );
+    });
+
+    it('should not delete because id is missing', async () => {
+        let newPost = await postModel.create({
+            title: 'Título Teste',
+            desc: 'Desc Teste',
+        });
+
+        let response = await request(app).delete('/');
+
+        expect(response.body).toEqual(
+            expect.objectContaining({
+                name: 'NOT FOUND',
+                message: 'Post Not Found',
+                status: 404,
+                data: null,
+            })
+        );
+    })
+});

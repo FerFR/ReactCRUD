@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import app from './app';
+import app from './utils/app';
 
 mongoose
     .connect('mongodb://db:27017')
