@@ -9,10 +9,19 @@ import {
     Submit,
 } from '../ModalForm/style';
 import { Text } from './style';
+import request from '../../request';
 
-const ModalDelete = ({ toggleDelete, setToggleDelete }) => {
+const ModalDelete = ({ toggleDelete, setToggleDelete, id, updatePosts }) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        await request.delete(id);
+        updatePosts();
+        setToggleDelete(false);
+    };
+
     return (
-        <Container isActive={toggleDelete}>
+        <Container onSubmit={handleSubmit} isActive={toggleDelete}>
             <Blackscreen onClick={() => setToggleDelete(false)} />
             <Form>
                 <Header>

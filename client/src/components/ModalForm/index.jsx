@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import * as S from './style';
+import request from '../../request';
 
 const ModalForm = ({
     toggleModal,
     setToggleModal,
+    updatePosts,
     modalTitle = 'Create Post',
     modalButton = 'Create',
     method = 'post',
+    id = '',
     title = '',
     desc = '',
 }) => {
@@ -14,12 +17,71 @@ const ModalForm = ({
         modalTitle: modalTitle,
         modalButton: modalButton,
         method: method,
+        id: id,
         title: title,
         desc: desc,
+        message: '',
+        messageColor: 'red',
     });
 
-    const handleSubmit = (e) => {
+    const createPost = async () => {
+        setFormData({ ...formData, message: '' });
+
+        let response = await request.post({
+            title: formData.title,
+            desc: formData.desc,
+        });
+
+        if (response.status === 400) {
+            setFormData({
+                ...formData,
+                message: response.message,
+                messageColor: 'red',
+            });
+            return;
+        }
+
+        setFormData({
+            ...formData,
+            title: '',
+            desc: '',
+            message: response.message,
+            messageColor: 'green',
+        });
+        updatePosts();
+    };
+    const updatePost = async () => {
+        setFormData({ ...formData, message: '' });
+
+        let response = await request.put(id, {
+            title: formData.title,
+            desc: formData.desc,
+        });
+
+        if (response.status === 400 || response.status === 404) {
+            setFormData({
+                ...formData,
+                message: response.message,
+                messageColor: 'red',
+            });
+            return;
+        }
+
+        setFormData({
+            ...formData,
+            message: response.message,
+            messageColor: 'green',
+        });
+        updatePosts();
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        if (method === 'post') {
+            createPost();
+            return;
+        }
+        updatePost();
     };
 
     return (
@@ -35,6 +97,11 @@ const ModalForm = ({
                         X
                     </S.CloseButton>
                 </S.Header>
+
+                <S.Message messageColor={formData.messageColor}>
+                    {formData.message}
+                </S.Message>
+
                 <S.FormGroup>
                     <S.Label htmlFor="inputTitle">Title</S.Label>
                     <S.Input
@@ -58,6 +125,7 @@ const ModalForm = ({
                         value={formData.desc}
                     />
                 </S.FormGroup>
+
                 <S.FormGroup>
                     <S.Submit type="submit">{formData.modalButton}</S.Submit>
                 </S.FormGroup>

@@ -35,6 +35,12 @@ export const Header = styled.header`
     margin-bottom: 60px;
     width: 100%;
 `;
+
+export const Message = styled.span`
+    color: ${(props) => props.messageColor};
+    font-size: 14px;
+    text-align: center;
+`;
 export const Title = styled.h2``;
 export const CloseButton = styled.button`
     border: none;
