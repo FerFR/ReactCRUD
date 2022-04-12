@@ -86,12 +86,20 @@ const ModalForm = ({
 
     return (
         <S.Container isActive={toggleModal}>
-            <S.Blackscreen onClick={() => setToggleModal(false)} />
+            <S.Blackscreen
+                onClick={() => {
+                    setToggleModal(false);
+                    setFormData({ ...formData, message: '' });
+                }}
+            />
             <S.Form onSubmit={handleSubmit}>
                 <S.Header>
                     <S.Title>{formData.modalTitle}</S.Title>
                     <S.CloseButton
-                        onClick={() => setToggleModal(false)}
+                        onClick={() => {
+                            setToggleModal(false);
+                            setFormData({ ...formData, message: '' });
+                        }}
                         type="button"
                     >
                         X
