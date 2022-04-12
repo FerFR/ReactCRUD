@@ -4,7 +4,7 @@ export const Container = styled.article`
     background-color: ${(props) => props.theme.colors.primary};
     padding: 20px;
     border-radius: 8px;
-    max-width: 330px;
+    width: 330px;
     color: white;
 `;
 export const Title = styled.h2`
