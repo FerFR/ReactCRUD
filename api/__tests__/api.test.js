@@ -22,7 +22,7 @@ describe('Get All Posts', () => {
 
         await postModel.insertMany(postData);
 
-        let response = await request(app).get('/').expect(200);
+        let response = await request(app).get('/');
         expect(response.body).toEqual(
             expect.objectContaining({
                 name: 'OK',
@@ -43,7 +43,7 @@ describe('Create new Post', () => {
             title: 'Fake Post Title',
             desc: 'Fake Post Description',
         };
-        let response = await request(app).post('/').send(newPost).expect(201);
+        let response = await request(app).post('/').send(newPost);
 
         expect(response.body).toEqual(
             expect.objectContaining({
@@ -62,7 +62,7 @@ describe('Create new Post', () => {
         let newPost = {
             desc: 'Fake Post Description',
         };
-        let response = await request(app).post('/').send(newPost).expect(400);
+        let response = await request(app).post('/').send(newPost);
 
         expect(response.body).toEqual(
             expect.objectContaining({
@@ -79,7 +79,7 @@ describe('Create new Post', () => {
             title: '',
             desc: 'Fake Post Description',
         };
-        let response = await request(app).post('/').send(newPost).expect(400);
+        let response = await request(app).post('/').send(newPost);
 
         expect(response.body).toEqual(
             expect.objectContaining({
@@ -95,7 +95,7 @@ describe('Create new Post', () => {
         let newPost = {
             title: 'Fake Post Title',
         };
-        let response = await request(app).post('/').send(newPost).expect(400);
+        let response = await request(app).post('/').send(newPost);
 
         expect(response.body).toEqual(
             expect.objectContaining({
@@ -112,7 +112,7 @@ describe('Create new Post', () => {
             title: 'Fake Post Title',
             desc: '',
         };
-        let response = await request(app).post('/').send(newPost).expect(400);
+        let response = await request(app).post('/').send(newPost);
 
         expect(response.body).toEqual(
             expect.objectContaining({
@@ -276,5 +276,5 @@ describe('Delete Post', () => {
                 data: null,
             })
         );
-    })
+    });
 });
